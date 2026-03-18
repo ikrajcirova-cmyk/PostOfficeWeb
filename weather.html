@@ -80,7 +80,7 @@
         <input
           id="search-input"
           type="text"
-          placeholder="Např. Praha, Brno, Ostrava..."
+          placeholder="Hledat jakékoliv město nebo obec v ČR…"
           class="w-full pl-11 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 text-base transition-all"
           autocomplete="off"
         />
@@ -211,61 +211,17 @@
   </div>
 
   <script>
-  // ─── CZECH CITIES DATA ────────────────────────────────────────────────────
-  const CITIES = [
-    { name: 'Praha',          region: 'Hlavní město Praha',   lat: 50.0755, lon: 14.4378 },
-    { name: 'Brno',           region: 'Jihomoravský kraj',    lat: 49.1951, lon: 16.6068 },
-    { name: 'Ostrava',        region: 'Moravskoslezský kraj', lat: 49.8209, lon: 18.2625 },
-    { name: 'Plzeň',          region: 'Plzeňský kraj',        lat: 49.7384, lon: 13.3736 },
-    { name: 'Liberec',        region: 'Liberecký kraj',       lat: 50.7671, lon: 15.0562 },
-    { name: 'Olomouc',        region: 'Olomoucký kraj',       lat: 49.5938, lon: 17.2509 },
-    { name: 'České Budějovice', region: 'Jihočeský kraj',    lat: 48.9747, lon: 14.4747 },
-    { name: 'Hradec Králové', region: 'Královéhradecký kraj', lat: 50.2092, lon: 15.8329 },
-    { name: 'Ústí nad Labem', region: 'Ústecký kraj',        lat: 50.6607, lon: 14.0323 },
-    { name: 'Pardubice',      region: 'Pardubický kraj',      lat: 50.0343, lon: 15.7812 },
-    { name: 'Zlín',           region: 'Zlínský kraj',         lat: 49.2246, lon: 17.6677 },
-    { name: 'Havířov',        region: 'Moravskoslezský kraj', lat: 49.7797, lon: 18.4330 },
-    { name: 'Kladno',         region: 'Středočeský kraj',     lat: 50.1440, lon: 14.1050 },
-    { name: 'Most',           region: 'Ústecký kraj',         lat: 50.5028, lon: 13.6361 },
-    { name: 'Opava',          region: 'Moravskoslezský kraj', lat: 49.9384, lon: 17.9026 },
-    { name: 'Frýdek-Místek',  region: 'Moravskoslezský kraj', lat: 49.6833, lon: 18.3500 },
-    { name: 'Karviná',        region: 'Moravskoslezský kraj', lat: 49.8560, lon: 18.5437 },
-    { name: 'Jihlava',        region: 'Kraj Vysočina',        lat: 49.3961, lon: 15.5903 },
-    { name: 'Teplice',        region: 'Ústecký kraj',         lat: 50.6406, lon: 13.8258 },
-    { name: 'Děčín',          region: 'Ústecký kraj',         lat: 50.7735, lon: 14.2135 },
-    { name: 'Karlovy Vary',   region: 'Karlovarský kraj',     lat: 50.2316, lon: 12.8717 },
-    { name: 'Chomutov',       region: 'Ústecký kraj',         lat: 50.4607, lon: 13.4078 },
-    { name: 'Přerov',         region: 'Olomoucký kraj',       lat: 49.4558, lon: 17.4507 },
-    { name: 'Prostějov',      region: 'Olomoucký kraj',       lat: 49.4726, lon: 17.1073 },
-    { name: 'Třebíč',         region: 'Kraj Vysočina',        lat: 49.2151, lon: 15.8786 },
-    { name: 'Mladá Boleslav', region: 'Středočeský kraj',     lat: 50.4115, lon: 14.9049 },
-    { name: 'Znojmo',         region: 'Jihomoravský kraj',    lat: 48.8553, lon: 16.0490 },
-    { name: 'Kolín',          region: 'Středočeský kraj',     lat: 50.0290, lon: 15.2000 },
-    { name: 'Česká Lípa',     region: 'Liberecký kraj',       lat: 50.6854, lon: 14.5376 },
-    { name: 'Cheb',           region: 'Karlovarský kraj',     lat: 50.0794, lon: 12.3735 },
-    { name: 'Tábor',          region: 'Jihočeský kraj',       lat: 49.4142, lon: 14.6594 },
-    { name: 'Trutnov',        region: 'Královéhradecký kraj', lat: 50.5606, lon: 15.9129 },
-    { name: 'Písek',          region: 'Jihočeský kraj',       lat: 49.3087, lon: 14.1483 },
-    { name: 'Šumperk',        region: 'Olomoucký kraj',       lat: 49.9638, lon: 16.9719 },
-    { name: 'Kroměříž',       region: 'Zlínský kraj',         lat: 49.2959, lon: 17.3931 },
-    { name: 'Uherské Hradiště',region: 'Zlínský kraj',        lat: 49.0718, lon: 17.4598 },
-    { name: 'Vsetín',         region: 'Zlínský kraj',         lat: 49.3388, lon: 17.9975 },
-    { name: 'Jablonec nad Nisou', region: 'Liberecký kraj',   lat: 50.7228, lon: 15.1701 },
-    { name: 'Strakonice',     region: 'Jihočeský kraj',       lat: 49.2601, lon: 13.9020 },
-    { name: 'Klatovy',        region: 'Plzeňský kraj',        lat: 49.3952, lon: 13.2953 },
-    { name: 'Beroun',         region: 'Středočeský kraj',     lat: 49.9639, lon: 14.0726 },
-    { name: 'Nový Jičín',     region: 'Moravskoslezský kraj', lat: 49.5941, lon: 18.0100 },
-    { name: 'Rychnov nad Kněžnou', region: 'Královéhradecký kraj', lat: 50.1618, lon: 16.2745 },
-    { name: 'Sokolov',        region: 'Karlovarský kraj',     lat: 50.1796, lon: 12.6420 },
-    { name: 'Jindřichův Hradec', region: 'Jihočeský kraj',   lat: 49.1446, lon: 15.0031 },
-    { name: 'Pelhřimov',      region: 'Kraj Vysočina',        lat: 49.4313, lon: 15.2238 },
-    { name: 'Havlíčkův Brod', region: 'Kraj Vysočina',        lat: 49.6072, lon: 15.5793 },
-    { name: 'Žďár nad Sázavou', region: 'Kraj Vysočina',     lat: 49.5638, lon: 15.9393 },
-    { name: 'Chrudim',        region: 'Pardubický kraj',      lat: 49.9525, lon: 15.7958 },
-    { name: 'Svitavy',        region: 'Pardubický kraj',      lat: 49.7547, lon: 16.4683 },
+  // ─── QUICK CITIES (hardcoded for instant access, no API call needed) ────────
+  const QUICK_CITIES = [
+    { name: 'Praha',             region: 'Hlavní město Praha',   lat: 50.0755, lon: 14.4378 },
+    { name: 'Brno',              region: 'Jihomoravský kraj',    lat: 49.1951, lon: 16.6068 },
+    { name: 'Ostrava',           region: 'Moravskoslezský kraj', lat: 49.8209, lon: 18.2625 },
+    { name: 'Plzeň',             region: 'Plzeňský kraj',        lat: 49.7384, lon: 13.3736 },
+    { name: 'Liberec',           region: 'Liberecký kraj',       lat: 50.7671, lon: 15.0562 },
+    { name: 'Olomouc',           region: 'Olomoucký kraj',       lat: 49.5938, lon: 17.2509 },
+    { name: 'České Budějovice',  region: 'Jihočeský kraj',       lat: 48.9747, lon: 14.4747 },
+    { name: 'Karlovy Vary',      region: 'Karlovarský kraj',     lat: 50.2316, lon: 12.8717 },
   ];
-
-  const QUICK_CITIES = ['Praha', 'Brno', 'Ostrava', 'Plzeň', 'Liberec', 'Olomouc', 'České Budějovice', 'Karlovy Vary'];
 
   // ─── WEATHER CODE MAPPING ─────────────────────────────────────────────────
   const WMO_CODES = {
@@ -384,32 +340,88 @@
     }
   }
 
-  // ─── SEARCH ───────────────────────────────────────────────────────────────
+  // ─── NOMINATIM SEARCH ────────────────────────────────────────────────────
   const searchInput = document.getElementById('search-input');
-  const dropdown = document.getElementById('search-dropdown');
+  const dropdown    = document.getElementById('search-dropdown');
+  let searchTimer   = null;
+  let currentResults = [];
 
   searchInput.addEventListener('input', () => {
-    const q = searchInput.value.trim().toLowerCase();
-    if (q.length < 1) { dropdown.classList.add('hidden'); return; }
+    const q = searchInput.value.trim();
+    clearTimeout(searchTimer);
 
-    const matches = CITIES.filter(c =>
-      c.name.toLowerCase().includes(q) || removeDiacritics(c.name).toLowerCase().includes(q)
-    ).slice(0, 8);
+    if (q.length < 2) {
+      dropdown.classList.add('hidden');
+      showDropdownMessage('');
+      return;
+    }
 
-    if (matches.length === 0) { dropdown.classList.add('hidden'); return; }
-
-    dropdown.innerHTML = matches.map(c => `
-      <div class="search-item px-4 py-3 cursor-pointer border-b border-gray-50 last:border-0 flex justify-between items-center"
-           onclick="selectCity('${c.name}')">
-        <div>
-          <span class="font-medium text-gray-800">${c.name}</span>
-        </div>
-        <span class="text-xs text-gray-400">${c.region}</span>
-      </div>
-    `).join('');
-
-    dropdown.classList.remove('hidden');
+    // Debounce: wait 350ms after user stops typing before calling API
+    searchTimer = setTimeout(() => searchNominatim(q), 350);
   });
+
+  async function searchNominatim(query) {
+    showDropdownMessage('<span class="text-[#7eafc8]">🔍 Hledám…</span>');
+    dropdown.classList.remove('hidden');
+
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?` +
+        `q=${encodeURIComponent(query)}&countrycodes=cz&format=json` +
+        `&addressdetails=1&limit=8&featuretype=settlement` +
+        `&accept-language=cs`;
+
+      const res = await fetch(url, {
+        headers: { 'Accept-Language': 'cs', 'User-Agent': 'CeskaPostaKalkulacka/1.0' }
+      });
+      if (!res.ok) throw new Error('Chyba sítě');
+      const data = await res.json();
+
+      if (data.length === 0) {
+        showDropdownMessage('<span class="text-gray-400">Žádné výsledky – zkuste jiný název</span>');
+        return;
+      }
+
+      currentResults = data.map(item => ({
+        name:    item.address.city || item.address.town || item.address.village || item.address.hamlet || item.name,
+        region:  item.address.state || item.address.county || '',
+        address: item.display_name,
+        lat:     parseFloat(item.lat),
+        lon:     parseFloat(item.lon),
+      }));
+
+      dropdown.innerHTML = currentResults.map((c, i) => `
+        <div class="search-item px-4 py-3 cursor-pointer border-b border-gray-50 last:border-0 flex justify-between items-center gap-3"
+             onclick="selectResult(${i})">
+          <div class="min-w-0">
+            <div class="font-medium text-gray-800 truncate">${c.name}</div>
+            <div class="text-xs text-gray-400 truncate">${c.region}</div>
+          </div>
+          <svg class="w-4 h-4 text-[#a8ccd9] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          </svg>
+        </div>
+      `).join('');
+
+      dropdown.classList.remove('hidden');
+
+    } catch (err) {
+      showDropdownMessage('<span class="text-red-400">Chyba při hledání – zkontrolujte připojení</span>');
+    }
+  }
+
+  function showDropdownMessage(html) {
+    if (!html) { dropdown.classList.add('hidden'); return; }
+    dropdown.innerHTML = `<div class="px-4 py-3 text-sm">${html}</div>`;
+    dropdown.classList.remove('hidden');
+  }
+
+  function selectResult(index) {
+    const city = currentResults[index];
+    if (!city) return;
+    searchInput.value = city.name;
+    dropdown.classList.add('hidden');
+    fetchWeather(city);
+  }
 
   document.addEventListener('click', e => {
     if (!e.target.closest('#search-input') && !e.target.closest('#search-dropdown')) {
@@ -417,30 +429,44 @@
     }
   });
 
-  function selectCity(name) {
-    const city = CITIES.find(c => c.name === name);
-    if (!city) return;
-    searchInput.value = city.name;
-    dropdown.classList.add('hidden');
-    fetchWeather(city);
-  }
-
-  function removeDiacritics(str) {
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  }
+  // Allow keyboard navigation in dropdown
+  searchInput.addEventListener('keydown', e => {
+    const items = dropdown.querySelectorAll('.search-item');
+    const active = dropdown.querySelector('.search-item.bg-\\[\\#eaf4f9\\]');
+    let idx = Array.from(items).indexOf(active);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      items.forEach(i => i.classList.remove('bg-[#eaf4f9]'));
+      const next = items[Math.min(idx + 1, items.length - 1)];
+      if (next) next.classList.add('bg-[#eaf4f9]');
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      items.forEach(i => i.classList.remove('bg-[#eaf4f9]'));
+      const prev = items[Math.max(idx - 1, 0)];
+      if (prev) prev.classList.add('bg-[#eaf4f9]');
+    } else if (e.key === 'Enter' && idx >= 0) {
+      e.preventDefault();
+      selectResult(idx);
+    } else if (e.key === 'Escape') {
+      dropdown.classList.add('hidden');
+    }
+  });
 
   // ─── QUICK CITIES ─────────────────────────────────────────────────────────
   const quickContainer = document.getElementById('quick-cities');
-  QUICK_CITIES.forEach(name => {
+  QUICK_CITIES.forEach(city => {
     const btn = document.createElement('button');
-    btn.textContent = name;
+    btn.textContent = city.name;
     btn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium border border-[#a8ccd9] text-[#5a93af] bg-[#eaf4f9] hover:bg-[#d5eaf4] transition-colors';
-    btn.onclick = () => selectCity(name);
+    btn.onclick = () => {
+      searchInput.value = city.name;
+      fetchWeather(city);
+    };
     quickContainer.appendChild(btn);
   });
 
   // ─── AUTO-LOAD PRAGUE ─────────────────────────────────────────────────────
-  fetchWeather(CITIES[0]);
+  fetchWeather(QUICK_CITIES[0]);
 
   </script>
 </body>
