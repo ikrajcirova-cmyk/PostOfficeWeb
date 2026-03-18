@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Počasí v České republice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --primary:      #7eafc8;
+      --primary-dark: #5a93af;
+      --primary-bg:   #eaf4f9;
+      --primary-border: #a8ccd9;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: #f4f8fb; }
+    #map { height: 380px; width: 100%; border-radius: 1rem; z-index: 0; }
+    .leaflet-container { border-radius: 1rem; }
+    .weather-icon { font-size: 4rem; line-height: 1; }
+    .fade-in { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .search-dropdown { max-height: 260px; overflow-y: auto; }
+    .search-item:hover { background-color: #eaf4f9; }
+    .stat-card { background: white; border: 1px solid #ddedf5; border-radius: 0.875rem; padding: 1rem; text-align: center; }
+    input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(126,175,200,0.2); }
+    .nav-link { color: var(--primary-dark); }
+    .nav-link:hover { color: var(--primary); }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-[#eaf4f9] rounded-lg p-2">
+          <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="6" fill="#7eafc8"/>
+            <path d="M8 14h24l-4 14H12L8 14z" fill="white" opacity="0.9"/>
+            <path d="M8 14l12 9 12-9" stroke="#7eafc8" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-gray-800 font-bold text-lg leading-tight">Česká pošta</div>
+          <div class="text-[#7eafc8] text-xs font-medium">Počasí v ČR</div>
+        </div>
+      </div>
+      <nav class="flex items-center gap-4 text-sm font-medium">
+        <a href="index.html" class="nav-link transition-colors">← Kalkulátor</a>
+        <span class="text-gray-300">|</span>
+        <span class="text-gray-500">Počasí</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="bg-[#eaf4f9] pb-14 pt-10 border-b border-[#cde5f0]">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <div class="text-4xl mb-2">⛅</div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">Počasí v České republice</h1>
+      <p class="text-[#5a93af] text-lg max-w-xl mx-auto">Vyberte město a zjistěte aktuální počasí kdekoliv v ČR.</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-5xl mx-auto px-4 mt-8 pb-16">
+
+    <!-- Search Box -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <label class="block text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Vyhledat město</label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Např. Praha, Brno, Ostrava..."
+          class="w-full pl-11 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 text-base transition-all"
+          autocomplete="off"
+        />
+        <div id="search-dropdown" class="hidden absolute z-40 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg search-dropdown"></div>
+      </div>
+
+      <!-- Quick select popular cities -->
+      <div class="mt-4">
+        <div class="text-xs text-gray-400 mb-2 font-medium">Rychlý výběr:</div>
+        <div class="flex flex-wrap gap-2" id="quick-cities"></div>
+      </div>
+    </div>
+
+    <!-- Weather Card -->
+    <div id="weather-section" class="hidden fade-in">
+
+      <!-- Main weather display -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <svg class="w-4 h-4 text-[#7eafc8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <span id="city-name" class="text-lg font-bold text-gray-800"></span>
+              <span id="city-region" class="text-sm text-gray-400"></span>
+            </div>
+            <div id="weather-updated" class="text-xs text-gray-400"></div>
+          </div>
+          <div id="loading-spinner" class="hidden flex items-center gap-2 text-[#7eafc8]">
+            <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <span class="text-sm">Načítám počasí…</span>
+          </div>
+        </div>
+
+        <div id="weather-data" class="mt-5">
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <div class="text-center">
+              <div class="weather-icon" id="weather-icon">🌤</div>
+              <div class="text-sm font-medium text-gray-600 mt-1" id="weather-desc"></div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-end gap-2">
+                <div class="text-6xl font-light text-gray-800" id="temp-value"></div>
+                <div class="text-2xl text-gray-400 mb-2">°C</div>
+              </div>
+              <div class="text-sm text-gray-500 mt-1" id="feels-like"></div>
+            </div>
+          </div>
+
+          <!-- Stats grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+            <div class="stat-card">
+              <div class="text-2xl mb-1">💧</div>
+              <div class="text-xs text-gray-400 font-medium">Vlhkost</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-humidity">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">🌬️</div>
+              <div class="text-xs text-gray-400 font-medium">Vítr</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-wind">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">👁️</div>
+              <div class="text-xs text-gray-400 font-medium">Viditelnost</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-visibility">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">🌡️</div>
+              <div class="text-xs text-gray-400 font-medium">Rosný bod</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-dewpoint">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">🌧️</div>
+              <div class="text-xs text-gray-400 font-medium">Srážky</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-precip">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">☁️</div>
+              <div class="text-xs text-gray-400 font-medium">Oblačnost</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-cloud">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">📊</div>
+              <div class="text-xs text-gray-400 font-medium">Tlak</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-pressure">–</div>
+            </div>
+            <div class="stat-card">
+              <div class="text-2xl mb-1">🌅</div>
+              <div class="text-xs text-gray-400 font-medium">UV index</div>
+              <div class="text-lg font-bold text-gray-700" id="stat-uv">–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Poloha na mapě</h2>
+        <div id="map"></div>
+      </div>
+
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+      <div class="text-5xl mb-4">🗺️</div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Vyberte město</h3>
+      <p class="text-gray-400 text-sm">Začněte psát název města do vyhledávacího pole nebo klikněte na jedno z oblíbených měst výše.</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error-state" class="hidden bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
+      <div class="text-4xl mb-3">⚠️</div>
+      <h3 class="text-base font-semibold text-red-700 mb-1">Nepodařilo se načíst počasí</h3>
+      <p class="text-red-400 text-sm" id="error-msg">Zkuste to prosím znovu.</p>
+    </div>
+
+    <!-- Footer note -->
+    <p class="text-center text-xs text-gray-400 mt-8">
+      Data o počasí: <a href="https://open-meteo.com" target="_blank" class="text-[#7eafc8] hover:underline">Open-Meteo</a> (aktualizace každou hodinu) ·
+      Mapy: <a href="https://openstreetmap.org" target="_blank" class="text-[#7eafc8] hover:underline">OpenStreetMap</a>
+    </p>
+  </div>
+
+  <script>
+  // ─── CZECH CITIES DATA ────────────────────────────────────────────────────
+  const CITIES = [
+    { name: 'Praha',          region: 'Hlavní město Praha',   lat: 50.0755, lon: 14.4378 },
+    { name: 'Brno',           region: 'Jihomoravský kraj',    lat: 49.1951, lon: 16.6068 },
+    { name: 'Ostrava',        region: 'Moravskoslezský kraj', lat: 49.8209, lon: 18.2625 },
+    { name: 'Plzeň',          region: 'Plzeňský kraj',        lat: 49.7384, lon: 13.3736 },
+    { name: 'Liberec',        region: 'Liberecký kraj',       lat: 50.7671, lon: 15.0562 },
+    { name: 'Olomouc',        region: 'Olomoucký kraj',       lat: 49.5938, lon: 17.2509 },
+    { name: 'České Budějovice', region: 'Jihočeský kraj',    lat: 48.9747, lon: 14.4747 },
+    { name: 'Hradec Králové', region: 'Královéhradecký kraj', lat: 50.2092, lon: 15.8329 },
+    { name: 'Ústí nad Labem', region: 'Ústecký kraj',        lat: 50.6607, lon: 14.0323 },
+    { name: 'Pardubice',      region: 'Pardubický kraj',      lat: 50.0343, lon: 15.7812 },
+    { name: 'Zlín',           region: 'Zlínský kraj',         lat: 49.2246, lon: 17.6677 },
+    { name: 'Havířov',        region: 'Moravskoslezský kraj', lat: 49.7797, lon: 18.4330 },
+    { name: 'Kladno',         region: 'Středočeský kraj',     lat: 50.1440, lon: 14.1050 },
+    { name: 'Most',           region: 'Ústecký kraj',         lat: 50.5028, lon: 13.6361 },
+    { name: 'Opava',          region: 'Moravskoslezský kraj', lat: 49.9384, lon: 17.9026 },
+    { name: 'Frýdek-Místek',  region: 'Moravskoslezský kraj', lat: 49.6833, lon: 18.3500 },
+    { name: 'Karviná',        region: 'Moravskoslezský kraj', lat: 49.8560, lon: 18.5437 },
+    { name: 'Jihlava',        region: 'Kraj Vysočina',        lat: 49.3961, lon: 15.5903 },
+    { name: 'Teplice',        region: 'Ústecký kraj',         lat: 50.6406, lon: 13.8258 },
+    { name: 'Děčín',          region: 'Ústecký kraj',         lat: 50.7735, lon: 14.2135 },
+    { name: 'Karlovy Vary',   region: 'Karlovarský kraj',     lat: 50.2316, lon: 12.8717 },
+    { name: 'Chomutov',       region: 'Ústecký kraj',         lat: 50.4607, lon: 13.4078 },
+    { name: 'Přerov',         region: 'Olomoucký kraj',       lat: 49.4558, lon: 17.4507 },
+    { name: 'Prostějov',      region: 'Olomoucký kraj',       lat: 49.4726, lon: 17.1073 },
+    { name: 'Třebíč',         region: 'Kraj Vysočina',        lat: 49.2151, lon: 15.8786 },
+    { name: 'Mladá Boleslav', region: 'Středočeský kraj',     lat: 50.4115, lon: 14.9049 },
+    { name: 'Znojmo',         region: 'Jihomoravský kraj',    lat: 48.8553, lon: 16.0490 },
+    { name: 'Kolín',          region: 'Středočeský kraj',     lat: 50.0290, lon: 15.2000 },
+    { name: 'Česká Lípa',     region: 'Liberecký kraj',       lat: 50.6854, lon: 14.5376 },
+    { name: 'Cheb',           region: 'Karlovarský kraj',     lat: 50.0794, lon: 12.3735 },
+    { name: 'Tábor',          region: 'Jihočeský kraj',       lat: 49.4142, lon: 14.6594 },
+    { name: 'Trutnov',        region: 'Královéhradecký kraj', lat: 50.5606, lon: 15.9129 },
+    { name: 'Písek',          region: 'Jihočeský kraj',       lat: 49.3087, lon: 14.1483 },
+    { name: 'Šumperk',        region: 'Olomoucký kraj',       lat: 49.9638, lon: 16.9719 },
+    { name: 'Kroměříž',       region: 'Zlínský kraj',         lat: 49.2959, lon: 17.3931 },
+    { name: 'Uherské Hradiště',region: 'Zlínský kraj',        lat: 49.0718, lon: 17.4598 },
+    { name: 'Vsetín',         region: 'Zlínský kraj',         lat: 49.3388, lon: 17.9975 },
+    { name: 'Jablonec nad Nisou', region: 'Liberecký kraj',   lat: 50.7228, lon: 15.1701 },
+    { name: 'Strakonice',     region: 'Jihočeský kraj',       lat: 49.2601, lon: 13.9020 },
+    { name: 'Klatovy',        region: 'Plzeňský kraj',        lat: 49.3952, lon: 13.2953 },
+    { name: 'Beroun',         region: 'Středočeský kraj',     lat: 49.9639, lon: 14.0726 },
+    { name: 'Nový Jičín',     region: 'Moravskoslezský kraj', lat: 49.5941, lon: 18.0100 },
+    { name: 'Rychnov nad Kněžnou', region: 'Královéhradecký kraj', lat: 50.1618, lon: 16.2745 },
+    { name: 'Sokolov',        region: 'Karlovarský kraj',     lat: 50.1796, lon: 12.6420 },
+    { name: 'Jindřichův Hradec', region: 'Jihočeský kraj',   lat: 49.1446, lon: 15.0031 },
+    { name: 'Pelhřimov',      region: 'Kraj Vysočina',        lat: 49.4313, lon: 15.2238 },
+    { name: 'Havlíčkův Brod', region: 'Kraj Vysočina',        lat: 49.6072, lon: 15.5793 },
+    { name: 'Žďár nad Sázavou', region: 'Kraj Vysočina',     lat: 49.5638, lon: 15.9393 },
+    { name: 'Chrudim',        region: 'Pardubický kraj',      lat: 49.9525, lon: 15.7958 },
+    { name: 'Svitavy',        region: 'Pardubický kraj',      lat: 49.7547, lon: 16.4683 },
+  ];
+
+  const QUICK_CITIES = ['Praha', 'Brno', 'Ostrava', 'Plzeň', 'Liberec', 'Olomouc', 'České Budějovice', 'Karlovy Vary'];
+
+  // ─── WEATHER CODE MAPPING ─────────────────────────────────────────────────
+  const WMO_CODES = {
+    0:  { icon: '☀️',  desc: 'Jasno' },
+    1:  { icon: '🌤️', desc: 'Převážně jasno' },
+    2:  { icon: '⛅',  desc: 'Polojasno' },
+    3:  { icon: '☁️',  desc: 'Zataženo' },
+    45: { icon: '🌫️', desc: 'Mlha' },
+    48: { icon: '🌫️', desc: 'Mlha s námrazou' },
+    51: { icon: '🌦️', desc: 'Slabé mrholení' },
+    53: { icon: '🌦️', desc: 'Mrholení' },
+    55: { icon: '🌧️', desc: 'Silné mrholení' },
+    61: { icon: '🌧️', desc: 'Slabý déšť' },
+    63: { icon: '🌧️', desc: 'Déšť' },
+    65: { icon: '🌧️', desc: 'Silný déšť' },
+    71: { icon: '🌨️', desc: 'Slabé sněžení' },
+    73: { icon: '🌨️', desc: 'Sněžení' },
+    75: { icon: '❄️',  desc: 'Silné sněžení' },
+    77: { icon: '🌨️', desc: 'Sněhové krupky' },
+    80: { icon: '🌦️', desc: 'Slabé přeháňky' },
+    81: { icon: '🌧️', desc: 'Přeháňky' },
+    82: { icon: '⛈️',  desc: 'Silné přeháňky' },
+    85: { icon: '🌨️', desc: 'Sněhové přeháňky' },
+    86: { icon: '❄️',  desc: 'Silné sněhové přeháňky' },
+    95: { icon: '⛈️',  desc: 'Bouřka' },
+    96: { icon: '⛈️',  desc: 'Bouřka s krupobitím' },
+    99: { icon: '⛈️',  desc: 'Bouřka se silným krupobitím' },
+  };
+
+  // ─── STATE ────────────────────────────────────────────────────────────────
+  let map = null;
+  let marker = null;
+  let selectedCity = null;
+
+  // ─── INIT MAP ─────────────────────────────────────────────────────────────
+  function initMap(lat, lon) {
+    if (!map) {
+      map = L.map('map', { zoomControl: true }).setView([lat, lon], 11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+        maxZoom: 19,
+      }).addTo(map);
+    } else {
+      map.setView([lat, lon], 11);
+    }
+
+    if (marker) marker.remove();
+
+    const customIcon = L.divIcon({
+      html: `<div style="background:#7eafc8;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25)"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      className: '',
+    });
+
+    marker = L.marker([lat, lon], { icon: customIcon })
+      .addTo(map)
+      .bindPopup(`<strong>${selectedCity.name}</strong><br>${selectedCity.region}`)
+      .openPopup();
+
+    setTimeout(() => map.invalidateSize(), 200);
+  }
+
+  // ─── FETCH WEATHER ────────────────────────────────────────────────────────
+  async function fetchWeather(city) {
+    selectedCity = city;
+
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('error-state').classList.add('hidden');
+    document.getElementById('weather-section').classList.remove('hidden');
+    document.getElementById('loading-spinner').classList.remove('hidden');
+    document.getElementById('weather-data').classList.add('opacity-40');
+    document.getElementById('city-name').textContent = city.name;
+    document.getElementById('city-region').textContent = city.region;
+
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}` +
+        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,` +
+        `cloud_cover,wind_speed_10m,wind_direction_10m,surface_pressure,visibility,dew_point_2m,uv_index` +
+        `&timezone=Europe%2FPrague&forecast_days=1`;
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const c = data.current;
+
+      const wmo = WMO_CODES[c.weather_code] || { icon: '🌡️', desc: `Kód ${c.weather_code}` };
+
+      document.getElementById('weather-icon').textContent = wmo.icon;
+      document.getElementById('weather-desc').textContent = wmo.desc;
+      document.getElementById('temp-value').textContent = Math.round(c.temperature_2m);
+      document.getElementById('feels-like').textContent = `Pocitová teplota: ${Math.round(c.apparent_temperature)} °C`;
+      document.getElementById('stat-humidity').textContent = `${c.relative_humidity_2m} %`;
+      document.getElementById('stat-wind').textContent = `${Math.round(c.wind_speed_10m)} km/h`;
+      document.getElementById('stat-visibility').textContent = c.visibility >= 1000
+        ? `${(c.visibility / 1000).toFixed(1)} km` : `${c.visibility} m`;
+      document.getElementById('stat-dewpoint').textContent = `${Math.round(c.dew_point_2m)} °C`;
+      document.getElementById('stat-precip').textContent = `${c.precipitation} mm`;
+      document.getElementById('stat-cloud').textContent = `${c.cloud_cover} %`;
+      document.getElementById('stat-pressure').textContent = `${Math.round(c.surface_pressure)} hPa`;
+      document.getElementById('stat-uv').textContent = c.uv_index !== null ? c.uv_index.toFixed(1) : '–';
+
+      const now = new Date();
+      document.getElementById('weather-updated').textContent =
+        `Aktualizováno: ${now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })}`;
+
+      initMap(city.lat, city.lon);
+
+    } catch (err) {
+      document.getElementById('weather-section').classList.add('hidden');
+      document.getElementById('error-state').classList.remove('hidden');
+      document.getElementById('error-msg').textContent = err.message || 'Chyba při načítání dat.';
+    } finally {
+      document.getElementById('loading-spinner').classList.add('hidden');
+      document.getElementById('weather-data').classList.remove('opacity-40');
+    }
+  }
+
+  // ─── SEARCH ───────────────────────────────────────────────────────────────
+  const searchInput = document.getElementById('search-input');
+  const dropdown = document.getElementById('search-dropdown');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (q.length < 1) { dropdown.classList.add('hidden'); return; }
+
+    const matches = CITIES.filter(c =>
+      c.name.toLowerCase().includes(q) || removeDiacritics(c.name).toLowerCase().includes(q)
+    ).slice(0, 8);
+
+    if (matches.length === 0) { dropdown.classList.add('hidden'); return; }
+
+    dropdown.innerHTML = matches.map(c => `
+      <div class="search-item px-4 py-3 cursor-pointer border-b border-gray-50 last:border-0 flex justify-between items-center"
+           onclick="selectCity('${c.name}')">
+        <div>
+          <span class="font-medium text-gray-800">${c.name}</span>
+        </div>
+        <span class="text-xs text-gray-400">${c.region}</span>
+      </div>
+    `).join('');
+
+    dropdown.classList.remove('hidden');
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#search-input') && !e.target.closest('#search-dropdown')) {
+      dropdown.classList.add('hidden');
+    }
+  });
+
+  function selectCity(name) {
+    const city = CITIES.find(c => c.name === name);
+    if (!city) return;
+    searchInput.value = city.name;
+    dropdown.classList.add('hidden');
+    fetchWeather(city);
+  }
+
+  function removeDiacritics(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  // ─── QUICK CITIES ─────────────────────────────────────────────────────────
+  const quickContainer = document.getElementById('quick-cities');
+  QUICK_CITIES.forEach(name => {
+    const btn = document.createElement('button');
+    btn.textContent = name;
+    btn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium border border-[#a8ccd9] text-[#5a93af] bg-[#eaf4f9] hover:bg-[#d5eaf4] transition-colors';
+    btn.onclick = () => selectCity(name);
+    quickContainer.appendChild(btn);
+  });
+
+  // ─── AUTO-LOAD PRAGUE ─────────────────────────────────────────────────────
+  fetchWeather(CITIES[0]);
+
+  </script>
+</body>
+</html>
