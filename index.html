@@ -8,33 +8,39 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .cp-red { color: #cc0000; }
-    .cp-red-bg { background-color: #cc0000; }
-    .cp-red-border { border-color: #cc0000; }
-    .tab-active { background-color: #cc0000; color: white; }
-    .tab-inactive { background-color: #f3f4f6; color: #374151; }
-    .tab-inactive:hover { background-color: #e5e7eb; }
+    :root {
+      --primary:     #7eafc8;
+      --primary-dark:#5a93af;
+      --primary-bg:  #eaf4f9;
+      --primary-border: #a8ccd9;
+    }
+    body { font-family: 'Inter', sans-serif; background-color: #f4f8fb; }
+    .cp-red { color: var(--primary-dark); }
+    .cp-red-bg { background-color: var(--primary); }
+    .cp-red-border { border-color: var(--primary); }
+    .tab-active { background-color: var(--primary); color: white; }
+    .tab-inactive { background-color: #f0f5f8; color: #4a6373; }
+    .tab-inactive:hover { background-color: #e2edf3; }
     .option-card { transition: all 0.15s ease; }
-    .option-card:hover { border-color: #cc0000; }
-    .option-card.selected { border-color: #cc0000; background-color: #fff5f5; }
-    .result-card { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
-    input[type="range"]::-webkit-slider-thumb { background: #cc0000; }
-    input[type="range"]::-webkit-slider-runnable-track { background: #e5e7eb; }
+    .option-card:hover { border-color: var(--primary); }
+    .option-card.selected { border-color: var(--primary); background-color: var(--primary-bg); }
+    .result-card { background: linear-gradient(135deg, #7eafc8 0%, #5a93af 100%); }
+    input[type="range"]::-webkit-slider-thumb { background: var(--primary); }
+    input[type="range"]::-webkit-slider-runnable-track { background: #dde8ef; }
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .fade-in { animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    .checkbox-cp input:checked + div { border-color: #cc0000; background: #cc0000; }
+    .checkbox-cp input:checked + div { border-color: var(--primary); background: var(--primary); }
     .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e5e7eb; transition: .3s; border-radius: 24px; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cddde6; transition: .3s; border-radius: 24px; }
     .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-    input:checked + .toggle-slider { background-color: #cc0000; }
+    input:checked + .toggle-slider { background-color: var(--primary); }
     input:checked + .toggle-slider:before { transform: translateX(20px); }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-[#f4f8fb] min-h-screen">
 
   <!-- Header -->
   <header class="cp-red-bg shadow-lg sticky top-0 z-50">
@@ -42,18 +48,18 @@
       <div class="flex items-center gap-3">
         <div class="bg-white rounded-lg p-2">
           <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none">
-            <rect width="40" height="40" rx="6" fill="#cc0000"/>
+            <rect width="40" height="40" rx="6" fill="#7eafc8"/>
             <path d="M8 14h24l-4 14H12L8 14z" fill="white" opacity="0.9"/>
-            <path d="M8 14l12 9 12-9" stroke="#cc0000" stroke-width="2" fill="none"/>
+            <path d="M8 14l12 9 12-9" stroke="#7eafc8" stroke-width="2" fill="none"/>
           </svg>
         </div>
         <div>
           <div class="text-white font-bold text-lg leading-tight">Česká pošta</div>
-          <div class="text-red-200 text-xs font-medium">Kalkulátor poštovného</div>
+          <div class="text-[#c4dde9] text-xs font-medium">Kalkulátor poštovného</div>
         </div>
       </div>
       <div class="hidden sm:block text-right">
-        <div class="text-red-100 text-xs">Ceny platné od</div>
+        <div class="text-[#c4dde9] text-xs">Ceny platné od</div>
         <div class="text-white text-sm font-semibold">1. 1. 2026</div>
       </div>
     </div>
@@ -63,7 +69,7 @@
   <div class="cp-red-bg pb-16 pt-8">
     <div class="max-w-5xl mx-auto px-4 text-center">
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Spočítejte si poštovné</h1>
-      <p class="text-red-100 text-lg max-w-2xl mx-auto">Rychle a přehledně zjistěte cenu zásilky u České pošty. Aktuální ceník platný od 1. 1. 2026.</p>
+      <p class="text-[#c4dde9] text-lg max-w-2xl mx-auto">Rychle a přehledně zjistěte cenu zásilky u České pošty. Aktuální ceník platný od 1. 1. 2026.</p>
     </div>
   </div>
 
@@ -100,7 +106,7 @@
                 <div>
                   <div class="font-semibold text-gray-900 text-sm">Balík Do ruky</div>
                   <div class="text-xs text-gray-500 mt-0.5">Doručení na adresu, max. 31,5 kg</div>
-                  <div class="text-xs font-semibold cp-red mt-1">od 129 Kč</div>
+                  <div class="text-xs font-semibold text-[#4a7d96] mt-1">od 129 Kč</div>
                 </div>
               </div>
             </div>
@@ -108,13 +114,13 @@
             <div onclick="selectService('balikovna-adresa')" id="service-balikovna-adresa"
               class="option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer">
               <div class="flex items-start gap-3">
-                <div class="bg-orange-500 rounded-lg p-2 flex-shrink-0">
+                <div class="bg-[#8dbfd4] rounded-lg p-2 flex-shrink-0">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </div>
                 <div>
                   <div class="font-semibold text-gray-900 text-sm">Balíkovna – Na adresu</div>
                   <div class="text-xs text-gray-500 mt-0.5">Doručení domů, max. 15 kg</div>
-                  <div class="text-xs font-semibold text-orange-600 mt-1">od 105 Kč</div>
+                  <div class="text-xs font-semibold text-[#5a93af] mt-1">od 105 Kč</div>
                 </div>
               </div>
             </div>
@@ -122,13 +128,13 @@
             <div onclick="selectService('balikovna-vydejni')" id="service-balikovna-vydejni"
               class="option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer">
               <div class="flex items-start gap-3">
-                <div class="bg-blue-600 rounded-lg p-2 flex-shrink-0">
+                <div class="bg-[#7eafc8] rounded-lg p-2 flex-shrink-0">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 00-1-1h-2a1 1 0 00-1 1v5m4 0H9"/></svg>
                 </div>
                 <div>
                   <div class="font-semibold text-gray-900 text-sm">Balíkovna – Výdejní místo</div>
                   <div class="text-xs text-gray-500 mt-0.5">Vyzvednutí v Balíkovně, max. 15 kg</div>
-                  <div class="text-xs font-semibold text-blue-600 mt-1">od 75 Kč</div>
+                  <div class="text-xs font-semibold text-[#5a93af] mt-1">od 75 Kč</div>
                 </div>
               </div>
             </div>
@@ -184,7 +190,7 @@
           <div class="mb-8">
             <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Slevy</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label class="flex items-center justify-between p-4 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-4 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-3">
                   <div class="bg-gray-100 rounded-lg p-2">
                     <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
@@ -199,7 +205,7 @@
                   <span class="toggle-slider"></span>
                 </label>
               </label>
-              <label class="flex items-center justify-between p-4 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-4 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-3">
                   <div class="bg-gray-100 rounded-lg p-2">
                     <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -222,9 +228,9 @@
             <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Doplňkové služby a příplatky</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-dobirka" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-dobirka" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Dobírka</div>
                     <div class="text-xs text-gray-400">Výběr platby od příjemce</div>
@@ -233,9 +239,9 @@
                 <span class="text-sm font-semibold text-gray-700">+36 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-garantovany" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-garantovany" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Garantovaný čas dodání</div>
                     <div class="text-xs text-gray-400">Doručení do 14 hodin D+1</div>
@@ -244,9 +250,9 @@
                 <span class="text-sm font-semibold text-gray-700">+60 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-vlastni-ruce" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-vlastni-ruce" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Dodání do vlastních rukou</div>
                     <div class="text-xs text-gray-400">Výhradně jen adresátovi</div>
@@ -255,9 +261,9 @@
                 <span class="text-sm font-semibold text-gray-700">+26 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-krehke" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-krehke" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Křehké</div>
                     <div class="text-xs text-gray-400">Opatrná manipulace (max. 50 cm, 10 kg)</div>
@@ -266,9 +272,9 @@
                 <span class="text-sm font-semibold text-gray-700">+36 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-cenny-obsah" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-cenny-obsah" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Cenný obsah</div>
                     <div class="text-xs text-gray-400">Šperky, peníze, cenné papíry</div>
@@ -277,9 +283,9 @@
                 <span class="text-sm font-semibold text-gray-700">+50 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-prodlouzeni" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-prodlouzeni" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Prodloužení úložní doby</div>
                     <div class="text-xs text-gray-400">15 dní místo standardních 7</div>
@@ -288,9 +294,9 @@
                 <span class="text-sm font-semibold text-gray-700">+24 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-sms" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-sms" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">SMS oznámení odesílateli</div>
                     <div class="text-xs text-gray-400">Notifikace o doručení</div>
@@ -299,9 +305,9 @@
                 <span class="text-sm font-semibold text-gray-700">+4 Kč</span>
               </label>
 
-              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+              <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <input type="checkbox" id="addon-nestandard" class="w-4 h-4 accent-red-600" onchange="calculateBDR()">
+                  <input type="checkbox" id="addon-nestandard" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBDR()">
                   <div>
                     <div class="text-sm font-medium text-gray-800">Nestandard</div>
                     <div class="text-xs text-gray-400">Nepravidelný tvar nebo obal</div>
@@ -316,10 +322,10 @@
 
         <!-- BALÍKOVNA NA ADRESU options -->
         <div id="balikovna-adresa-options" class="hidden fade-in">
-          <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 mb-6">
+          <div class="bg-[#eef7fb] border border-[#b8dae8] rounded-xl p-5 mb-6">
             <div class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <div class="text-sm text-orange-800">
+              <svg class="w-5 h-5 text-[#7eb8d0] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="text-sm text-[#3a6b7e]">
                 <strong>Balíkovna – Na adresu:</strong> Balík doručíme kamkoliv v ČR. Maximální hmotnost 15 kg, největší rozměr 50 × 50 × 50 cm.
               </div>
             </div>
@@ -340,14 +346,14 @@
                 <div id="ba-registered" class="option-card border-2 border-gray-200 rounded-xl p-4">
                   <div class="text-sm font-semibold text-gray-900">S účtem Moje Balíkovna</div>
                   <div class="text-xs text-gray-500 mt-1">Zvýhodněná cena</div>
-                  <div class="text-lg font-bold text-orange-600 mt-2">105 Kč</div>
+                  <div class="text-lg font-bold text-[#5a93af] mt-2">105 Kč</div>
                 </div>
               </label>
             </div>
           </div>
           <div class="mb-6">
             <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Doplňkové služby</h2>
-            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-orange-400 transition-colors">
+            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#8cbdd1] transition-colors">
               <div class="flex items-center gap-2.5">
                 <input type="checkbox" id="ba-dobirka" class="w-4 h-4 accent-orange-500" onchange="calculateBalikovna('adresa')">
                 <div>
@@ -362,10 +368,10 @@
 
         <!-- BALÍKOVNA VÝDEJNÍ MÍSTO options -->
         <div id="balikovna-vydejni-options" class="hidden fade-in">
-          <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+          <div class="bg-[#eaf4f9] border border-[#b8d8e6] rounded-xl p-5 mb-6">
             <div class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <div class="text-sm text-blue-800">
+              <svg class="w-5 h-5 text-[#7eafc8] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="text-sm text-[#3a6b80]">
                 <strong>Balíkovna – Výdejní místo:</strong> Příjemce si balík vyzvedne na vybraném výdejním místě nebo Balíkovna-BOXu. Maximální hmotnost 15 kg, největší rozměr 50 × 50 × 50 cm.
               </div>
             </div>
@@ -386,16 +392,16 @@
                 <div id="bv-registered" class="option-card border-2 border-gray-200 rounded-xl p-4">
                   <div class="text-sm font-semibold text-gray-900">S účtem Moje Balíkovna</div>
                   <div class="text-xs text-gray-500 mt-1">Zvýhodněná cena</div>
-                  <div class="text-lg font-bold text-blue-600 mt-2">75 Kč</div>
+                  <div class="text-lg font-bold text-[#5a93af] mt-2">75 Kč</div>
                 </div>
               </label>
             </div>
           </div>
           <div class="mb-6">
             <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Doplňkové služby</h2>
-            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-blue-400 transition-colors">
+            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#8cbdd1] transition-colors">
               <div class="flex items-center gap-2.5">
-                <input type="checkbox" id="bv-dobirka" class="w-4 h-4 accent-blue-600" onchange="calculateBalikovna('vydejni')">
+                <input type="checkbox" id="bv-dobirka" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateBalikovna('vydejni')">
                 <div>
                   <div class="text-sm font-medium text-gray-800">Dobírka</div>
                   <div class="text-xs text-gray-400">Do výše 50 000 Kč</div>
@@ -410,19 +416,19 @@
         <div id="result-baliky" class="result-card rounded-2xl p-6 text-white">
           <div class="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <div class="text-red-100 text-sm font-medium mb-1">Celková cena s DPH</div>
+              <div class="text-[#daedf5] text-sm font-medium mb-1">Celková cena s DPH</div>
               <div class="text-4xl font-bold" id="price-baliky">129 Kč</div>
-              <div class="text-red-200 text-xs mt-1" id="price-breakdown-baliky">Základní cena: 129 Kč</div>
+              <div class="text-[#c4dde9] text-xs mt-1" id="price-breakdown-baliky">Základní cena: 129 Kč</div>
             </div>
             <div class="text-right">
               <div class="bg-white bg-opacity-20 rounded-xl px-4 py-2">
-                <div class="text-red-100 text-xs">Dodání</div>
+                <div class="text-[#daedf5] text-xs">Dodání</div>
                 <div class="text-white font-semibold text-sm" id="delivery-info-baliky">Běžně D+1</div>
               </div>
             </div>
           </div>
-          <div class="mt-4 pt-4 border-t border-red-400 border-opacity-40">
-            <div class="text-red-100 text-xs" id="service-info-baliky">
+          <div class="mt-4 pt-4 border-t border-[#8cbdd1] border-opacity-40">
+            <div class="text-[#daedf5] text-xs" id="service-info-baliky">
               Balík Do ruky · Velikost S (do 35 cm) · max. 31,5 kg · sledování zásilky v ceně
             </div>
           </div>
@@ -523,7 +529,7 @@
               <input type="radio" name="speed-letter" value="prioritni" class="hidden" onchange="calculateLetter()">
               <div id="speed-prioritni" class="option-card border-2 border-gray-200 rounded-xl p-4">
                 <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-orange-500"></div>
+                  <div class="w-2 h-2 rounded-full bg-[#8dbfd4]"></div>
                   <div class="text-sm font-semibold text-gray-900">Prioritní (D+1)</div>
                 </div>
                 <div class="text-xs text-gray-500 mt-1">Doručení do 2. pracovního dne · s označením D+1</div>
@@ -536,9 +542,9 @@
         <div class="mb-8" id="letter-addons">
           <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Doplňkové služby</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
               <div class="flex items-center gap-2.5">
-                <input type="checkbox" id="letter-dodejka" class="w-4 h-4 accent-red-600" onchange="calculateLetter()">
+                <input type="checkbox" id="letter-dodejka" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateLetter()">
                 <div>
                   <div class="text-sm font-medium text-gray-800">Dodejka</div>
                   <div class="text-xs text-gray-400">Doklad o doručení</div>
@@ -546,9 +552,9 @@
               </div>
               <span class="text-sm font-semibold text-gray-700">+30 Kč</span>
             </label>
-            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors" id="letter-vr-label">
+            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors" id="letter-vr-label">
               <div class="flex items-center gap-2.5">
-                <input type="checkbox" id="letter-vlastni-ruce" class="w-4 h-4 accent-red-600" onchange="calculateLetter()">
+                <input type="checkbox" id="letter-vlastni-ruce" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateLetter()">
                 <div>
                   <div class="text-sm font-medium text-gray-800">Dodání do vlastních rukou</div>
                   <div class="text-xs text-gray-400">Výhradně jen adresátovi</div>
@@ -556,9 +562,9 @@
               </div>
               <span class="text-sm font-semibold text-gray-700">+24 Kč</span>
             </label>
-            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors" id="letter-dobirka-label">
+            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors" id="letter-dobirka-label">
               <div class="flex items-center gap-2.5">
-                <input type="checkbox" id="letter-dobirka" class="w-4 h-4 accent-red-600" onchange="calculateLetter()">
+                <input type="checkbox" id="letter-dobirka" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateLetter()">
                 <div>
                   <div class="text-sm font-medium text-gray-800">Dobírka – účet</div>
                   <div class="text-xs text-gray-400">Bez poštovní poukázky</div>
@@ -566,9 +572,9 @@
               </div>
               <span class="text-sm font-semibold text-gray-700">+30 Kč</span>
             </label>
-            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-red-300 transition-colors">
+            <label class="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 cursor-pointer hover:border-[#a8ccd9] transition-colors">
               <div class="flex items-center gap-2.5">
-                <input type="checkbox" id="letter-sms" class="w-4 h-4 accent-red-600" onchange="calculateLetter()">
+                <input type="checkbox" id="letter-sms" class="w-4 h-4 accent-[#7eafc8]" onchange="calculateLetter()">
                 <div>
                   <div class="text-sm font-medium text-gray-800">SMS oznámení odesílateli</div>
                   <div class="text-xs text-gray-400">Zpráva o doručení</div>
@@ -583,17 +589,17 @@
         <div class="result-card rounded-2xl p-6 text-white">
           <div class="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <div class="text-red-100 text-sm font-medium mb-1">Celková cena</div>
+              <div class="text-[#daedf5] text-sm font-medium mb-1">Celková cena</div>
               <div class="text-4xl font-bold" id="price-dopisy">77 Kč</div>
-              <div class="text-red-200 text-xs mt-1" id="price-breakdown-dopisy">Základní cena: 77 Kč</div>
+              <div class="text-[#c4dde9] text-xs mt-1" id="price-breakdown-dopisy">Základní cena: 77 Kč</div>
             </div>
             <div class="bg-white bg-opacity-20 rounded-xl px-4 py-2">
-              <div class="text-red-100 text-xs">DPH</div>
+              <div class="text-[#daedf5] text-xs">DPH</div>
               <div class="text-white font-semibold text-sm">Osvobozeno</div>
             </div>
           </div>
-          <div class="mt-4 pt-4 border-t border-red-400 border-opacity-40">
-            <div class="text-red-100 text-xs" id="service-info-dopisy">
+          <div class="mt-4 pt-4 border-t border-[#8cbdd1] border-opacity-40">
+            <div class="text-[#daedf5] text-xs" id="service-info-dopisy">
               Doporučené psaní Ekonomické · do 50 g · osvobozeno od DPH
             </div>
           </div>
