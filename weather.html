@@ -11,19 +11,19 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
-      --primary:      #7eafc8;
-      --primary-dark: #5a93af;
-      --primary-bg:   #eaf4f9;
-      --primary-border: #a8ccd9;
+      --primary:      #6aab8e;
+      --primary-dark: #4d8a72;
+      --primary-bg:   #edf8f2;
+      --primary-border: #9dcab5;
     }
-    body { font-family: 'Inter', sans-serif; background-color: #f4f8fb; }
+    body { font-family: 'Inter', sans-serif; background-color: #f4faf7; }
     #map { height: 380px; width: 100%; border-radius: 1rem; z-index: 0; }
     .leaflet-container { border-radius: 1rem; }
     .weather-icon { font-size: 4rem; line-height: 1; }
     .fade-in { animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .search-dropdown { max-height: 260px; overflow-y: auto; }
-    .search-item:hover { background-color: #eaf4f9; }
+    .search-item:hover { background-color: #edf8f2; }
     .stat-card { background: white; border: 1px solid #ddedf5; border-radius: 0.875rem; padding: 1rem; text-align: center; }
     input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(126,175,200,0.2); }
     .nav-link { color: var(--primary-dark); }
@@ -36,16 +36,16 @@
   <header class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="bg-[#eaf4f9] rounded-lg p-2">
+        <div class="bg-[#edf8f2] rounded-lg p-2">
           <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none">
-            <rect width="40" height="40" rx="6" fill="#7eafc8"/>
+            <rect width="40" height="40" rx="6" fill="#6aab8e"/>
             <path d="M8 14h24l-4 14H12L8 14z" fill="white" opacity="0.9"/>
-            <path d="M8 14l12 9 12-9" stroke="#7eafc8" stroke-width="2" fill="none"/>
+            <path d="M8 14l12 9 12-9" stroke="#6aab8e" stroke-width="2" fill="none"/>
           </svg>
         </div>
         <div>
           <div class="text-gray-800 font-bold text-lg leading-tight">Česká pošta</div>
-          <div class="text-[#7eafc8] text-xs font-medium">Počasí v ČR</div>
+          <div class="text-[#6aab8e] text-xs font-medium">Počasí v ČR</div>
         </div>
       </div>
       <nav class="flex items-center gap-4 text-sm font-medium">
@@ -57,11 +57,11 @@
   </header>
 
   <!-- Hero -->
-  <div class="bg-[#eaf4f9] pb-14 pt-10 border-b border-[#cde5f0]">
+  <div class="bg-[#edf8f2] pb-14 pt-10 border-b border-[#c2e8d6]">
     <div class="max-w-5xl mx-auto px-4 text-center">
       <div class="text-4xl mb-2">⛅</div>
       <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">Počasí v České republice</h1>
-      <p class="text-[#5a93af] text-lg max-w-xl mx-auto">Vyberte město a zjistěte aktuální počasí kdekoliv v ČR.</p>
+      <p class="text-[#4d8a72] text-lg max-w-xl mx-auto">Vyberte město a zjistěte aktuální počasí kdekoliv v ČR.</p>
     </div>
   </div>
 
@@ -102,7 +102,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <svg class="w-4 h-4 text-[#7eafc8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-[#6aab8e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
@@ -111,7 +111,7 @@
             </div>
             <div id="weather-updated" class="text-xs text-gray-400"></div>
           </div>
-          <div id="loading-spinner" class="hidden flex items-center gap-2 text-[#7eafc8]">
+          <div id="loading-spinner" class="hidden flex items-center gap-2 text-[#6aab8e]">
             <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
@@ -205,8 +205,8 @@
 
     <!-- Footer note -->
     <p class="text-center text-xs text-gray-400 mt-8">
-      Data o počasí: <a href="https://open-meteo.com" target="_blank" class="text-[#7eafc8] hover:underline">Open-Meteo</a> (aktualizace každou hodinu) ·
-      Mapy: <a href="https://openstreetmap.org" target="_blank" class="text-[#7eafc8] hover:underline">OpenStreetMap</a>
+      Data o počasí: <a href="https://open-meteo.com" target="_blank" class="text-[#6aab8e] hover:underline">Open-Meteo</a> (aktualizace každou hodinu) ·
+      Mapy: <a href="https://openstreetmap.org" target="_blank" class="text-[#6aab8e] hover:underline">OpenStreetMap</a>
     </p>
   </div>
 
@@ -271,7 +271,7 @@
     if (marker) marker.remove();
 
     const customIcon = L.divIcon({
-      html: `<div style="background:#7eafc8;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25)"></div>`,
+      html: `<div style="background:#6aab8e;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25)"></div>`,
       iconSize: [20, 20],
       iconAnchor: [10, 10],
       className: '',
@@ -361,7 +361,7 @@
   });
 
   async function searchNominatim(query) {
-    showDropdownMessage('<span class="text-[#7eafc8]">🔍 Hledám…</span>');
+    showDropdownMessage('<span class="text-[#6aab8e]">🔍 Hledám…</span>');
     dropdown.classList.remove('hidden');
 
     try {
@@ -396,7 +396,7 @@
             <div class="font-medium text-gray-800 truncate">${c.name}</div>
             <div class="text-xs text-gray-400 truncate">${c.region}</div>
           </div>
-          <svg class="w-4 h-4 text-[#a8ccd9] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-[#9dcab5] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
           </svg>
         </div>
@@ -432,18 +432,18 @@
   // Allow keyboard navigation in dropdown
   searchInput.addEventListener('keydown', e => {
     const items = dropdown.querySelectorAll('.search-item');
-    const active = dropdown.querySelector('.search-item.bg-\\[\\#eaf4f9\\]');
+    const active = dropdown.querySelector('.search-item.bg-\\[\\#edf8f2\\]');
     let idx = Array.from(items).indexOf(active);
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      items.forEach(i => i.classList.remove('bg-[#eaf4f9]'));
+      items.forEach(i => i.classList.remove('bg-[#edf8f2]'));
       const next = items[Math.min(idx + 1, items.length - 1)];
-      if (next) next.classList.add('bg-[#eaf4f9]');
+      if (next) next.classList.add('bg-[#edf8f2]');
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      items.forEach(i => i.classList.remove('bg-[#eaf4f9]'));
+      items.forEach(i => i.classList.remove('bg-[#edf8f2]'));
       const prev = items[Math.max(idx - 1, 0)];
-      if (prev) prev.classList.add('bg-[#eaf4f9]');
+      if (prev) prev.classList.add('bg-[#edf8f2]');
     } else if (e.key === 'Enter' && idx >= 0) {
       e.preventDefault();
       selectResult(idx);
@@ -457,7 +457,7 @@
   QUICK_CITIES.forEach(city => {
     const btn = document.createElement('button');
     btn.textContent = city.name;
-    btn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium border border-[#a8ccd9] text-[#5a93af] bg-[#eaf4f9] hover:bg-[#d5eaf4] transition-colors';
+    btn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium border border-[#9dcab5] text-[#4d8a72] bg-[#edf8f2] hover:bg-[#d0ede1] transition-colors';
     btn.onclick = () => {
       searchInput.value = city.name;
       fetchWeather(city);
